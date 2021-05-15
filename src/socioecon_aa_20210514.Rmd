@@ -1,0 +1,55 @@
+---
+title: "Socioeconomic Data Maunalua Bay"
+author: "Kristin Gill"
+date: "5/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(scales)
+```
+
+```{r}
+# read in the data
+socioeocnomic <- read_csv(here("data", "income_by_location.csv")) %>% 
+  clean_names()
+```
+
+```{r}
+# only including census tracts in the Maunalua Bay Watershed Areas: 1.14 Portlock, 1.12 Koko Marina, 1.11 Lunalilo Park, 1.07 Kuapa Isle, 1.06 Hahaione-Mariners Ridge, 2 Kuliouou, 3.01 Aina Haina-Hawaii Loa Ridge, 3.02 Wailupe, 4.02 Waialae Iki, 4.01 Waialae Nui Ridge-Ainakoa, 5 Waialae-Kahala 
+
+se_mb <- socioeocnomic %>% 
+  filter(geography %in% c("Census Tract 1.14, Honolulu County, HI", "Census Tract 1.12, Honolulu County, HI", "Census Tract 1.11, Honolulu County, HI", "Census Tract 1.07, Honolulu County, HI", "Census Tract 1.06, Honolulu County, HI", "Census Tract 2, Honolulu County, HI", "Census Tract 3.01, Honolulu County, HI", "Census Tract 3.02, Honolulu County, HI", "Census Tract 4.02, Honolulu County, HI", "Census Tract 4.01, Honolulu County, HI", "Census Tract 5, Honolulu County, HI")) %>% 
+  mutate(geography = case_when(
+    geography == "Census Tract 1.14, Honolulu County, HI" ~ "Portlock",
+    geography == "Census Tract 1.12, Honolulu County, HI" ~ "Koko Marina",
+    geography == "Census Tract 1.11, Honolulu County, HI" ~ "Lunalilo Park",
+    geography == "Census Tract 1.07, Honolulu County, HI" ~ "Kuapa Isle",
+    geography == "Census Tract 1.06, Honolulu County, HI" ~ "Hahaione-Mariners",
+    geography == "Census Tract 2, Honolulu County, HI" ~ "Kuliouou",
+    geography == "Census Tract 3.01, Honolulu County, HI" ~ "Aina Haina-Hawaii Loa",
+    geography == "Census Tract 3.02, Honolulu County, HI" ~ "Wailupe",
+    geography == "Census Tract 4.02, Honolulu County, HI" ~ "Waialae Iki",
+    geography == "Census Tract 4.01, Honolulu County, HI" ~ "Waialae Nui-Ainakoa",
+    geography == "Census Tract 5, Honolulu County, HI" ~ "Waialae-Kahala")) %>% 
+  select(year, household_income_by_race, geography, id_geography) %>% 
+  rename("household_income" = "household_income_by_race") %>% 
+  arrange(desc(household_income))
+```
+
+```{r}
+# graphing income over time for the region
+ggplot(data = se_mb, aes(x = year,
+                         y = household_income)) +
+  geom_col(fill = "lightblue") +
+  theme_minimal()+
+  facet_wrap(~geography) +
+  labs(x = "Year",
+       y = "Median Household Income") +
+  scale_y_continuous(label = comma)
+```
+
