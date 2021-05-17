@@ -42,7 +42,7 @@ se_mb <- socioeocnomic %>%
 ```
 
 ```{r}
-# graphing income over time for the region
+# graphing income over time for the maunalua bay region
 ggplot(data = se_mb, aes(x = year,
                          y = household_income)) +
   geom_col(fill = "lightblue") +

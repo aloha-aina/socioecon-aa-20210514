@@ -205,7 +205,7 @@ se_mb &lt;- socioeocnomic %&gt;%
   select(year, household_income_by_race, geography, id_geography) %&gt;% 
   rename(&quot;household_income&quot; = &quot;household_income_by_race&quot;) %&gt;% 
   arrange(desc(household_income))</code></pre>
-<pre class="r"><code># graphing income over time for the region
+<pre class="r"><code># graphing income over time for the maunalua bay region
 ggplot(data = se_mb, aes(x = year,
                          y = household_income)) +
   geom_col(fill = &quot;lightblue&quot;) +
